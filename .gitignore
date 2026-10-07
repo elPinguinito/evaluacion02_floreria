@@ -1,0 +1,80 @@
+venv/
+*.pyc
+__pycache__/
+.DS_Store
+*.sqlite3
+
+# PARTE 1: Pasos para Mac (Tu equipo)
+# Copias y ejecutas estos comandos en la Terminal de tu Mac:
+# Bash
+# ==========================================
+# 1. ACTIVAR Y DESACTIVAR EL ENTORNO VIRTUAL
+# ==========================================
+# Comando para ACTIVAR tu entorno virtual en Mac:
+# source venv/bin/activate
+
+# # Comando para DESACTIVAR tu entorno virtual cuando termines de trabajar:
+# deactivate
+
+# ==========================================
+# 2. LIMPIAR GIT Y SUBIR LOS CAMBIOS (COMMIT / PUSH)
+# ==========================================
+# Paso A: Guardar la lista de librerías en el archivo de requisitos
+# pip freeze > requirements.txt
+
+# Paso B: Quitar la carpeta venv de Git (sin borrar tus archivos de la computadora)
+# git rm -r --cached venv
+
+# Paso C: Agregar el archivo .gitignore y el requirements.txt a Git
+# git add .gitignore requirements.txt
+
+# Paso D: Guardar los cambios localmente con un mensaje
+# git commit -m "Limpieza de venv y configuracion de gitignore"
+
+# # Paso E: Subir todos los cambios al repositorio en GitHub
+# git push origin main
+
+
+
+# PARTE 2: Pasos para Windows (Tu compañero)
+# Tu compañero copia y ejecuta estos comandos en su Símbolo del sistema (CMD) o PowerShell de Windows:
+# DOS
+# ==========================================
+# 1. DESCARGAR EL PROYECTO Y CREAR SU PROPIO ENTORNO
+# ==========================================
+
+# Paso A: Descargar los cambios actualizados que tú subiste desde la Mac
+# git pull origin main
+
+# Paso B: Crear su propio entorno virtual nativo de Windows (dentro de la carpeta del proyecto)
+# python -m venv venv
+
+# Paso C: ACTIVAR el entorno virtual en Windows
+# venv\Scripts\activate
+
+# Paso D: Instalar todas las librerías necesarias del proyecto
+# pip install -r requirements.txt
+
+# ==========================================
+# 2. ACTIVAR Y DESACTIVAR EL ENTORNO EN WINDOWS
+# ==========================================
+# Comando para ACTIVAR el entorno cuando vuelva a abrir el proyecto:
+# venv\Scripts\activate
+
+# Comando para DESACTIVAR el entorno cuando termine de trabajar:
+# deactivate
+
+# ==========================================
+# 3. CUANDO ÉL HAGA CAMBIOS Y QUIERA SUBIR UN COMMIT
+# ==========================================
+# Paso A: Guardar cualquier nueva librería instalada
+# pip freeze > requirements.txt
+
+# Paso B: Seleccionar todos sus cambios de código
+# git add .
+
+# Paso C: Guardar el mensaje de sus avances
+# git commit -m "Avances en el proyecto desde Windows"
+
+# Paso D: Subir sus cambios al repositorio
+# git push origin main
