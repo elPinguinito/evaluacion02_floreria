@@ -247,7 +247,6 @@ def crear_detalle(request):
         flor_id = request.POST.get('flor')
         cantidad = request.POST.get('cantidad', 1)
         precio_unitario = request.POST.get('precio_unitario', 0)
-
         pedido = get_object_or_404(Pedido, id=pedido_id)
         flor = get_object_or_404(Flor, id=flor_id)
 
