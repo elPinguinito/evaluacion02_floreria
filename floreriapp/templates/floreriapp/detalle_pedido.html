@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Pedido</title>
+</head>
+<body>
+    <h1>Detalle del Pedido #{{ pedido.id }}</h1>
+
+    <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
+    <p><strong>Dirección de entrega:</strong> {{ pedido.direccion_entrega }}</p>
+    <p><strong>Estado:</strong> {{ pedido.estado }}</p>
+    <p><strong>Total:</strong> ${{ pedido.total }}</p>
+
+    <hr>
+
+    <h3>Ítems comprados en este pedido:</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Flor</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in pedido.detallepedido_set.all %}
+                <tr>
+                    <td>{{ detalle.flor.nombre }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>${{ detalle.precio_unitario }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">Este pedido no tiene flores agregadas aún.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{% url 'editar_pedido' pedido.id %}">Editar este pedido</a> |
+    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+</body>
+</html>

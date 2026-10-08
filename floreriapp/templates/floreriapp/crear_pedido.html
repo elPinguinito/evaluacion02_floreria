@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Pedido</title>
+</head>
+<body>
+    <h1>Crear nuevo pedido</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="cliente">Cliente:</label><br>
+        <select id="cliente" name="cliente" required>
+            <option value="">-- Seleccione un cliente --</option>
+            {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre }} ({{ cliente.email }})</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="fecha_pedido">Fecha de pedido:</label><br>
+        <input type="date" id="fecha_pedido" name="fecha_pedido" required>
+
+        <br><br>
+
+        <label for="direccion_entrega">Dirección de entrega:</label><br>
+        <input type="text" id="direccion_entrega" name="direccion_entrega" required>
+
+        <br><br>
+
+        <label for="estado">Estado del pedido:</label><br>
+        <select id="estado" name="estado" required>
+            {% for valor, etiqueta in estados %}
+                <option value="{{ valor }}">{{ etiqueta }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="total">Total ($):</label><br>
+        <input type="number" id="total" name="total" value="0" min="0" required>
+
+        <br><br>
+
+        <button type="submit">Guardar pedido</button>
+    </form>
+
+    <br>
+    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+</body>
+</html>

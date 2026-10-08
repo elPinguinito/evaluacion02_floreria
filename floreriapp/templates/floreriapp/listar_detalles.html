@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Detalles de Pedido</title>
+</head>
+<body>
+    <h1>Todos los Detalles de Pedidos</h1>
+
+    <a href="{% url 'crear_detalle' %}"> + Agregar ítem a pedido</a>
+    <br><br>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID Detalle</th>
+                <th>ID Pedido</th>
+                <th>Cliente</th>
+                <th>Flor</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.id }}</td>
+                    <td>#{{ detalle.pedido.id }}</td>
+                    <td>{{ detalle.pedido.cliente.nombre }}</td>
+                    <td>{{ detalle.flor.nombre }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>${{ detalle.precio_unitario }}</td>
+                    <td>
+                        <a href="{% url 'eliminar_detalle' detalle.id %}">Eliminar</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">No hay detalles registrados.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{% url 'inicio' %}">Volver al inicio</a>
+</body>
+</html>
