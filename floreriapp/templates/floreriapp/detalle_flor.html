@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Flor</title>
+</head>
+<body>
+    <h1>Detalle de: {{ flor.nombre }}</h1>
+
+    <p><strong>ID:</strong> {{ flor.id }}</p>
+    <p><strong>Descripción:</strong> {{ flor.descripcion }}</p>
+    <p><strong>Color:</strong> {{ flor.color }}</p>
+    <p><strong>Precio:</strong> ${{ flor.precio }}</p>
+    <p><strong>Stock:</strong> {{ flor.stock }} unidades</p>
+    <p><strong>Disponible:</strong> {% if flor.disponible %}Sí{% else %}No{% endif %}</p>
+
+    <br>
+    <a href="{% url 'editar_flor' flor.id %}">Editar esta flor</a> |
+    <a href="{% url 'listar_flores' %}">Volver a la lista de flores</a>
+</body>
+</html>

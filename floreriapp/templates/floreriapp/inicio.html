@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio - Florería</title>
+</head>
+<body>
+    <h1>Panel de Control - Florería</h1>
+    <p>Bienvenido al sistema de administración de la floristería.</p>
+
+    <hr>
+
+    <h2>Navegación del Sistema</h2>
+    <ul>
+        <li><a href="{% url 'listar_flores' %}">Gestión de Flores (Catálogo)</a></li>
+        <li><a href="{% url 'listar_clientes' %}">Gestión de Clientes</a></li>
+        <li><a href="{% url 'listar_pedidos' %}">Gestión de Pedidos</a></li>
+        <li><a href="{% url 'listar_detalles' %}">Gestión de Detalles de Pedidos</a></li>
+    </ul>
+
+    <hr>
+
+    <h2>Flores Registradas en la Tienda</h2>
+    
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Color</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flor in flores %}
+                <tr>
+                    <td>{{ flor.id }}</td>
+                    <td>{{ flor.nombre }}</td>
+                    <td>{{ flor.color }}</td>
+                    <td>${{ flor.precio }}</td>
+                    <td>{{ flor.stock }}</td>
+                    <td>
+                        {% if flor.disponible %}
+                            Disponible
+                        {% else %}
+                            No disponible
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No hay flores registradas en la base de datos.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

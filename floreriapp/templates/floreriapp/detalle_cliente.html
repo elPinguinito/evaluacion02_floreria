@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Cliente</title>
+</head>
+<body>
+    <h1>Cliente: {{ cliente.nombre }}</h1>
+
+    <p><strong>ID:</strong> {{ cliente.id }}</p>
+    <p><strong>Email:</strong> {{ cliente.email }}</p>
+    <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+
+    <br>
+    <a href="{% url 'editar_cliente' cliente.id %}">Editar este cliente</a> |
+    <a href="{% url 'listar_clientes' %}">Volver a la lista de clientes</a>
+</body>
+</html>

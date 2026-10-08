@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Detalle de Pedido</title>
+</head>
+<body>
+    <h1>Agregar ítem a un pedido</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="pedido">Seleccionar Pedido:</label><br>
+        <select id="pedido" name="pedido" required>
+            <option value="">-- Seleccione un pedido --</option>
+            {% for pedido in pedidos %}
+                <option value="{{ pedido.id }}">Pedido #{{ pedido.id }} - {{ pedido.cliente.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="flor">Seleccionar Flor:</label><br>
+        <select id="flor" name="flor" required>
+            <option value="">-- Seleccione una flor --</option>
+            {% for flor in flores %}
+                <option value="{{ flor.id }}">{{ flor.nombre }} (${{ flor.precio }})</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="cantidad">Cantidad:</label><br>
+        <input type="number" id="cantidad" name="cantidad" value="1" min="1" required>
+
+        <br><br>
+
+        <label for="precio_unitario">Precio unitario ($):</label><br>
+        <input type="number" id="precio_unitario" name="precio_unitario" value="0" min="0" required>
+
+        <br><br>
+
+        <button type="submit">Agregar ítem al pedido</button>
+    </form>
+
+    <br>
+    <a href="{% url 'listar_detalles' %}">Volver a la lista de detalles</a>
+</body>
+</html>

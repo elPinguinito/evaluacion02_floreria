@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Flores</title>
+</head>
+<body>
+    <h1>Catálogo de Flores</h1>
+
+    <a href="{% url 'crear_flor' %}"> + Agregar nueva flor</a>
+    <br><br>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Color</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Disponible</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flor in flores %}
+                <tr>
+                    <td>{{ flor.id }}</td>
+                    <td>{{ flor.nombre }}</td>
+                    <td>{{ flor.color }}</td>
+                    <td>${{ flor.precio }}</td>
+                    <td>{{ flor.stock }}</td>
+                    <td>{% if flor.disponible %}Sí{% else %}No{% endif %}</td>
+                    <td>
+                        <a href="{% url 'detalle_flor' flor.id %}">Ver</a> |
+                        <a href="{% url 'editar_flor' flor.id %}">Editar</a> |
+                        <a href="{% url 'eliminar_flor' flor.id %}">Eliminar</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7">No hay flores registradas.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{% url 'inicio' %}">Volver al inicio</a>
+</body>
+</html>
