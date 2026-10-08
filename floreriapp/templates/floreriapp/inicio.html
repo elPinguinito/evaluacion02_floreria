@@ -3,59 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <title>Inicio - Florería</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+            border-top: 6px solid #2e7d32;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 30px;
+            text-align: center;
+        }
+
+        p.bienvenida {
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2c5e3b;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e8f5e9;
+            padding-bottom: 8px;
+        }
+
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .grid-menu li a {
+            display: block;
+            background-color: #f9fbf9;
+            color: #2e7d32;
+            text-align: center;
+            padding: 16px 12px;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .grid-menu li a:hover {
+            background-color: #2e7d32;
+            color: #ffffff;
+            border-color: #2e7d32;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2e7d32;
+            color: white;
+            text-align: left;
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #444;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fbf9;
+        }
+
+        tr:hover {
+            background-color: #f1f8e9;
+        }
+
+        .badge-disponible {
+            color: #2e7d32;
+            font-weight: bold;
+            background-color: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .badge-nodisponible {
+            color: #c62828;
+            font-weight: bold;
+            background-color: #ffebee;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Panel de Control - Florería</h1>
-    <p>Bienvenido al sistema de administración de la floristería.</p>
+    <div class="container">
+        <h1>Panel de Control - Florería</h1>
+        <p class="bienvenida">Bienvenido al sistema de administración de la floristería.</p>
 
-    <hr>
+        <h2>Navegación del Sistema</h2>
+        <ul class="grid-menu">
+            <li><a href="{% url 'listar_flores' %}">Gestión de Flores (Catálogo)</a></li>
+            <li><a href="{% url 'listar_clientes' %}">Gestión de Clientes</a></li>
+            <li><a href="{% url 'listar_pedidos' %}">Gestión de Pedidos</a></li>
+            <li><a href="{% url 'listar_detalles' %}">Gestión de Detalles</a></li>
+        </ul>
 
-    <h2>Navegación del Sistema</h2>
-    <ul>
-        <li><a href="{% url 'listar_flores' %}">Gestión de Flores (Catálogo)</a></li>
-        <li><a href="{% url 'listar_clientes' %}">Gestión de Clientes</a></li>
-        <li><a href="{% url 'listar_pedidos' %}">Gestión de Pedidos</a></li>
-        <li><a href="{% url 'listar_detalles' %}">Gestión de Detalles de Pedidos</a></li>
-    </ul>
-
-    <hr>
-
-    <h2>Flores Registradas en la Tienda</h2>
-    
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Color</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for flor in flores %}
+        <h2>Flores Registradas en la Tienda</h2>
+        
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ flor.id }}</td>
-                    <td>{{ flor.nombre }}</td>
-                    <td>{{ flor.color }}</td>
-                    <td>${{ flor.precio }}</td>
-                    <td>{{ flor.stock }}</td>
-                    <td>
-                        {% if flor.disponible %}
-                            Disponible
-                        {% else %}
-                            No disponible
-                        {% endif %}
-                    </td>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Color</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6">No hay flores registradas en la base de datos.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                {% for flor in flores %}
+                    <tr>
+                        <td>{{ flor.id }}</td>
+                        <td><strong>{{ flor.nombre }}</strong></td>
+                        <td>{{ flor.color }}</td>
+                        <td>${{ flor.precio }}</td>
+                        <td>{{ flor.stock }}</td>
+                        <td>
+                            {% if flor.disponible %}
+                                <span class="badge-disponible">Disponible</span>
+                            {% else %}
+                                <span class="badge-nodisponible">No disponible</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #777;">No hay flores registradas en la base de datos.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

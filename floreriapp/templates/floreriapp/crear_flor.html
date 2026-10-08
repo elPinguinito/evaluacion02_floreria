@@ -3,6 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <title>Crear Flor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        ul {
+            background-color: #ffebee;
+            border-left: 4px solid #e53935;
+            padding: 12px 20px 12px 35px;
+            border-radius: 4px;
+            max-width: 420px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            border-top: 5px solid #2e7d32;
+        }
+
+        label {
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: #2e7d32;
+            outline: none;
+            box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
+        }
+
+        input[type="checkbox"] {
+            accent-color: #2e7d32;
+            transform: scale(1.1);
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1b5e20;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.99);
+        }
+
+        a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 15px;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #1b5e20;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Crear nueva flor</h1>
