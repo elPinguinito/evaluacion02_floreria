@@ -3,17 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <title>Eliminar Detalle</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #c62828;
+            margin-bottom: 15px;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .card-eliminar {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            border-top: 5px solid #c62828;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        strong {
+            color: #2c5e3b;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background-color: #c62828;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #b71c1c;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.99);
+        }
+
+        a {
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 15px;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #2e7d32;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>¿Estás seguro de eliminar este ítem del pedido?</h1>
-    <p>Eliminarás <strong>{{ detalle.cantidad }}x {{ detalle.flor.nombre }}</strong> del <strong>Pedido #{{ detalle.pedido.id }}</strong>.</p>
+    <div class="card-eliminar">
+        <h1>¿Estás seguro de eliminar este ítem del pedido?</h1>
+        <p>Eliminarás <strong>{{ detalle.cantidad }}x {{ detalle.flor.nombre }}</strong> del <strong>Pedido #{{ detalle.pedido.id }}</strong>.</p>
 
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit" style="color: red;">Sí, eliminar ítem</button>
-    </form>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">Sí, eliminar ítem</button>
+        </form>
 
-    <br>
-    <a href="{% url 'listar_detalles' %}">Cancelar y volver</a>
+        <br>
+        <a href="{% url 'listar_detalles' %}">Cancelar y volver</a>
+    </div>
 </body>
 </html>

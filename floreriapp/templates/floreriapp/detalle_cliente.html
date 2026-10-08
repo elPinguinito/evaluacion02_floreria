@@ -3,17 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalle de Cliente</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .card-detalle {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            border-top: 5px solid #2e7d32;
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 12px 0;
+            color: #444;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        p:last-of-type {
+            border-bottom: none;
+        }
+
+        strong {
+            color: #2c5e3b;
+        }
+
+        .acciones {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #1b5e20;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Cliente: {{ cliente.nombre }}</h1>
+    <div class="card-detalle">
+        <h1>Cliente: {{ cliente.nombre }}</h1>
 
-    <p><strong>ID:</strong> {{ cliente.id }}</p>
-    <p><strong>Email:</strong> {{ cliente.email }}</p>
-    <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
-    <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+        <p><strong>ID:</strong> {{ cliente.id }}</p>
+        <p><strong>Email:</strong> {{ cliente.email }}</p>
+        <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+        <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
 
-    <br>
-    <a href="{% url 'editar_cliente' cliente.id %}">Editar este cliente</a> |
-    <a href="{% url 'listar_clientes' %}">Volver a la lista de clientes</a>
+        <div class="acciones">
+            <br>
+            <a href="{% url 'editar_cliente' cliente.id %}">Editar este cliente</a> |
+            <a href="{% url 'listar_clientes' %}">Volver a la lista de clientes</a>
+        </div>
+    </div>
 </body>
 </html>

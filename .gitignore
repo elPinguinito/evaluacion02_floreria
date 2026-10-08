@@ -4,7 +4,7 @@ __pycache__/
 .DS_Store
 *.sqlite3
 
-# PARTE 1: Pasos para Mac (Tu equipo)
+# PARTE 1: Pasos para Mac
 # Copias y ejecutas estos comandos en la Terminal de tu Mac:
 # Bash
 # ==========================================
@@ -13,9 +13,8 @@ __pycache__/
 # Comando para ACTIVAR tu entorno virtual en Mac:
 # source venv/bin/activate
 
-# # Comando para DESACTIVAR tu entorno virtual cuando termines de trabajar:
+# Comando para DESACTIVAR tu entorno virtual cuando termines de trabajar:
 # deactivate
-
 # ==========================================
 # 2. LIMPIAR GIT Y SUBIR LOS CAMBIOS (COMMIT / PUSH)
 # ==========================================
@@ -36,7 +35,7 @@ __pycache__/
 
 
 
-# PARTE 2: Pasos para Windows (Tu compañero)
+# PARTE 2: Pasos para Windows
 # Tu compañero copia y ejecuta estos comandos en su Símbolo del sistema (CMD) o PowerShell de Windows:
 # DOS
 # ==========================================

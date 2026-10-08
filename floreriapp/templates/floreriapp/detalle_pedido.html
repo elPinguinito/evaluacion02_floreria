@@ -3,44 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalle de Pedido</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .card-detalle {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+            border-top: 5px solid #2e7d32;
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 12px 0;
+            color: #444;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        strong {
+            color: #2c5e3b;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 25px 0 20px 0;
+        }
+
+        h3 {
+            color: #2c5e3b;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2e7d32;
+            color: white;
+            text-align: left;
+            padding: 10px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fbf9;
+        }
+
+        .acciones {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #1b5e20;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Detalle del Pedido #{{ pedido.id }}</h1>
+    <div class="card-detalle">
+        <h1>Detalle del Pedido #{{ pedido.id }}</h1>
 
-    <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
-    <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
-    <p><strong>Dirección de entrega:</strong> {{ pedido.direccion_entrega }}</p>
-    <p><strong>Estado:</strong> {{ pedido.estado }}</p>
-    <p><strong>Total:</strong> ${{ pedido.total }}</p>
+        <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
+        <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
+        <p><strong>Dirección de entrega:</strong> {{ pedido.direccion_entrega }}</p>
+        <p><strong>Estado:</strong> {{ pedido.estado }}</p>
+        <p><strong>Total:</strong> ${{ pedido.total }}</p>
 
-    <hr>
+        <hr>
 
-    <h3>Ítems comprados en este pedido:</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Flor</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for detalle in pedido.detallepedido_set.all %}
+        <h3>Ítems comprados en este pedido:</h3>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ detalle.flor.nombre }}</td>
-                    <td>{{ detalle.cantidad }}</td>
-                    <td>${{ detalle.precio_unitario }}</td>
+                    <th>Flor</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="3">Este pedido no tiene flores agregadas aún.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for detalle in pedido.detallepedido_set.all %}
+                    <tr>
+                        <td>{{ detalle.flor.nombre }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>${{ detalle.precio_unitario }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #777;">Este pedido no tiene flores agregadas aún.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <br>
-    <a href="{% url 'editar_pedido' pedido.id %}">Editar este pedido</a> |
-    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+        <div class="acciones">
+            <br>
+            <a href="{% url 'editar_pedido' pedido.id %}">Editar este pedido</a> |
+            <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+        </div>
+    </div>
 </body>
 </html>
