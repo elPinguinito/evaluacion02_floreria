@@ -11,9 +11,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import Flor, Cliente, Pedido, DetallePedido
 
-# =====================================================================
-# VISTAS WEB TRADICIONALES (Interfaz de la florería)
-# =====================================================================
 
 def inicio(request):
     flores = Flor.objects.all()
@@ -117,6 +114,8 @@ def eliminar_flor(request, flor_id):
         return redirect('listar_flores')
     return render(request, 'floreriapp/eliminar_flor.html', {'flor': flor})
 
+
+
 # --- CLIENTES ---
 def listar_clientes(request):
     clientes = Cliente.objects.all()
@@ -178,6 +177,8 @@ def eliminar_cliente(request, cliente_id):
         return redirect('listar_clientes')
     return render(request, 'floreriapp/eliminar_cliente.html', {'cliente': cliente})
 
+
+
 # --- PEDIDOS ---
 def listar_pedidos(request):
     pedidos = Pedido.objects.all()
@@ -234,6 +235,8 @@ def eliminar_pedido(request, pedido_id):
         pedido.delete()
         return redirect('listar_pedidos')
     return render(request, 'floreriapp/eliminar_pedido.html', {'pedido': pedido})
+
+
 
 # --- DETALLES DE PEDIDO ---
 def listar_detalles(request):
@@ -521,6 +524,8 @@ class PedidoDetalleApiView(APIView):
         p.total = total
         p.save()
         return Response({'mensaje': 'Pedido actualizado correctamente'}, status=status.HTTP_200_OK)
+
+
 
 
 # ---------------------------------------------------------------------
