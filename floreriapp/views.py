@@ -16,50 +16,12 @@ def inicio(request):
     flores = Flor.objects.all()
     return render(request, 'floreriapp/inicio.html', {'flores': flores})
 
-# --- FLORES ---
+# ----- FLORES -----
 def listar_flores(request):
     flores = Flor.objects.all()
     return render(request, 'floreriapp/listar_flores.html', {'flores': flores})
 
 def crear_flor(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre', '').strip()
-        descripcion = request.POST.get('descripcion', '').strip()
-        color = request.POST.get('color', '').strip()
-        precio_str = request.POST.get('precio', '0')
-        stock_str = request.POST.get('stock', '0')
-        disponible = request.POST.get('disponible', False) == 'on'
-
-        errores = []
-        if not nombre or not descripcion or not color:
-            errores.append("Todos los campos de texto son obligatorios.")
-        
-        try:
-            precio = int(precio_str)
-            if precio <= 0:
-                errores.append("El precio debe ser mayor a 0.")
-        except ValueError:
-            errores.append("El precio debe ser un número válido.")
-
-        try:
-            stock = int(stock_str)
-            if stock < 0:
-                errores.append("El stock no puede ser negativo.")
-        except ValueError:
-            errores.append("El stock debe ser un número entero.")
-
-        if errores:
-            return render(request, 'floreriapp/crear_flor.html', {'errores': errores})
-
-        Flor.objects.create(
-            nombre=nombre,
-            descripcion=descripcion,
-            color=color,
-            precio=precio,
-            stock=stock,
-            disponible=disponible
-        )
-        return redirect('listar_flores')
     return render(request, 'floreriapp/crear_flor.html')
 
 def detalle_flor(request, flor_id):
@@ -68,77 +30,19 @@ def detalle_flor(request, flor_id):
 
 def editar_flor(request, flor_id):
     flor = get_object_or_404(Flor, id=flor_id)
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre', '').strip()
-        descripcion = request.POST.get('descripcion', '').strip()
-        color = request.POST.get('color', '').strip()
-        precio_str = request.POST.get('precio', '0')
-        stock_str = request.POST.get('stock', '0')
-        disponible = request.POST.get('disponible', False) == 'on'
-
-        errores = []
-        if not nombre or not descripcion or not color:
-            errores.append("Todos los campos son obligatorios.")
-
-        try:
-            precio = int(precio_str)
-            if precio <= 0:
-                errores.append("El precio debe ser mayor a 0.")
-        except ValueError:
-            errores.append("El precio debe ser un número válido.")
-
-        try:
-            stock = int(stock_str)
-            if stock < 0:
-                errores.append("El stock no puede ser negativo.")
-        except ValueError:
-            errores.append("El stock debe ser un número entero.")
-
-        if errores:
-            return render(request, 'floreriapp/editar_flor.html', {'flor': flor, 'errores': errores})
-
-        flor.nombre = nombre
-        flor.descripcion = descripcion
-        flor.color = color
-        flor.precio = precio
-        flor.stock = stock
-        flor.disponible = disponible
-        flor.save()
-        return redirect('listar_flores')
     return render(request, 'floreriapp/editar_flor.html', {'flor': flor})
 
 def eliminar_flor(request, flor_id):
     flor = get_object_or_404(Flor, id=flor_id)
-    if request.method == 'POST':
-        flor.delete()
-        return redirect('listar_flores')
     return render(request, 'floreriapp/eliminar_flor.html', {'flor': flor})
 
 
-
-# --- CLIENTES ---
+# ----- CLIENTES -----
 def listar_clientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'floreriapp/listar_clientes.html', {'clientes': clientes})
 
 def crear_cliente(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre', '').strip()
-        email = request.POST.get('email', '').strip()
-        telefono = request.POST.get('telefono', '').strip()
-        direccion = request.POST.get('direccion', '').strip()
-
-        errores = []
-        if not nombre or not email or not telefono or not direccion:
-            errores.append("Todos los campos del cliente son obligatorios.")
-        if "@" not in email or "." not in email:
-            errores.append("Debe ingresar un correo electrónico válido.")
-
-        if errores:
-            return render(request, 'floreriapp/crear_cliente.html', {'errores': errores})
-
-        Cliente.objects.create(nombre=nombre, email=email, telefono=telefono, direccion=direccion)
-        return redirect('listar_clientes')
     return render(request, 'floreriapp/crear_cliente.html')
 
 def detalle_cliente(request, cliente_id):
@@ -147,62 +51,19 @@ def detalle_cliente(request, cliente_id):
 
 def editar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre', '').strip()
-        email = request.POST.get('email', '').strip()
-        telefono = request.POST.get('telefono', '').strip()
-        direccion = request.POST.get('direccion', '').strip()
-
-        errores = []
-        if not nombre or not email or not telefono or not direccion:
-            errores.append("Todos los campos son obligatorios.")
-        if "@" not in email or "." not in email:
-            errores.append("Ingrese un correo válido.")
-
-        if errores:
-            return render(request, 'floreriapp/editar_cliente.html', {'cliente': cliente, 'errores': errores})
-
-        cliente.nombre = nombre
-        cliente.email = email
-        cliente.telefono = telefono
-        cliente.direccion = direccion
-        cliente.save()
-        return redirect('listar_clientes')
     return render(request, 'floreriapp/editar_cliente.html', {'cliente': cliente})
 
 def eliminar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
-    if request.method == 'POST':
-        cliente.delete()
-        return redirect('listar_clientes')
     return render(request, 'floreriapp/eliminar_cliente.html', {'cliente': cliente})
 
 
-
-# --- PEDIDOS ---
+# ----- PEDIDOS -----
 def listar_pedidos(request):
     pedidos = Pedido.objects.all()
     return render(request, 'floreriapp/listar_pedidos.html', {'pedidos': pedidos})
 
 def crear_pedido(request):
-    if request.method == 'POST':
-        cliente_id = request.POST.get('cliente')
-        fecha_pedido = request.POST.get('fecha_pedido')
-        direccion_entrega = request.POST.get('direccion_entrega', '').strip()
-        estado = request.POST.get('estado', 'Pendiente')
-        total = request.POST.get('total', 0)
-
-        cliente = get_object_or_404(Cliente, id=cliente_id)
-
-        Pedido.objects.create(
-            cliente=cliente,
-            fecha_pedido=fecha_pedido,
-            direccion_entrega=direccion_entrega,
-            estado=estado,
-            total=total
-        )
-        return redirect('listar_pedidos')
-
     clientes = Cliente.objects.all()
     return render(request, 'floreriapp/crear_pedido.html', {'clientes': clientes, 'estados': Pedido.ESTADOS})
 
@@ -212,16 +73,6 @@ def detalle_pedido(request, pedido_id):
 
 def editar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    if request.method == 'POST':
-        cliente_id = request.POST.get('cliente')
-        pedido.cliente = get_object_or_404(Cliente, id=cliente_id)
-        pedido.fecha_pedido = request.POST.get('fecha_pedido')
-        pedido.direccion_entrega = request.POST.get('direccion_entrega')
-        pedido.estado = request.POST.get('estado')
-        pedido.total = request.POST.get('total')
-        pedido.save()
-        return redirect('listar_pedidos')
-
     clientes = Cliente.objects.all()
     return render(request, 'floreriapp/editar_pedido.html', {
         'pedido': pedido,
@@ -231,49 +82,26 @@ def editar_pedido(request, pedido_id):
 
 def eliminar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    if request.method == 'POST':
-        pedido.delete()
-        return redirect('listar_pedidos')
     return render(request, 'floreriapp/eliminar_pedido.html', {'pedido': pedido})
 
 
-
-# --- DETALLES DE PEDIDO ---
+# ----- DETALLES DE PEDIDO -----
 def listar_detalles(request):
     detalles = DetallePedido.objects.all()
     return render(request, 'floreriapp/listar_detalles.html', {'detalles': detalles})
 
 def crear_detalle(request):
-    if request.method == 'POST':
-        pedido_id = request.POST.get('pedido')
-        flor_id = request.POST.get('flor')
-        cantidad = request.POST.get('cantidad', 1)
-        precio_unitario = request.POST.get('precio_unitario', 0)
-        pedido = get_object_or_404(Pedido, id=pedido_id)
-        flor = get_object_or_404(Flor, id=flor_id)
-
-        DetallePedido.objects.create(
-            pedido=pedido,
-            flor=flor,
-            cantidad=cantidad,
-            precio_unitario=precio_unitario
-        )
-        return redirect('listar_detalles')
     pedidos = Pedido.objects.all()
     flores = Flor.objects.all()
     return render(request, 'floreriapp/crear_detalle.html', {'pedidos': pedidos, 'flores': flores})
 
 def eliminar_detalle(request, detalle_id):
     detalle = get_object_or_404(DetallePedido, id=detalle_id)
-    if request.method == 'POST':
-        detalle.delete()
-        return redirect('listar_detalles')
     return render(request, 'floreriapp/eliminar_detalle.html', {'detalle': detalle})
 
 
-# =====================================================================
-# API REST (Estructura basada en APIView manuales sin Serializers)
-# =====================================================================
+# --------------------
+# ----- API REST -----
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -294,9 +122,8 @@ class LoginAPIView(APIView):
         return Response({'error': 'Usuario o contraseña incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# ---------------------------------------------------------------------
-# API FLORES
-# ---------------------------------------------------------------------
+# ----------------------
+# ----- API FLORES -----
 class FlorApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -317,15 +144,33 @@ class FlorApiView(APIView):
         return Response(datos, status=status.HTTP_200_OK)
 
     def post(self, request):
-        nombre = request.data.get('nombre')
-        descripcion = request.data.get('descripcion')
-        color = request.data.get('color')
-        precio = request.data.get('precio')
-        stock = request.data.get('stock')
+        nombre = request.data.get('nombre', '').strip()
+        descripcion = request.data.get('descripcion', '').strip()
+        color = request.data.get('color', '').strip()
+        precio_str = request.data.get('precio', '0')
+        stock_str = request.data.get('stock', '0')
         disponible = request.data.get('disponible', True)
 
-        if not nombre or not descripcion or not color or precio is None or stock is None:
-            return Response({'error': 'Debes enviar todos los campos obligatorios'}, status=status.HTTP_400_BAD_REQUEST)
+        errores = []
+        if not nombre or not descripcion or not color:
+            errores.append("Todos los campos de texto son obligatorios.")
+        
+        try:
+            precio = int(precio_str)
+            if precio <= 0:
+                errores.append("El precio debe ser mayor a 0.")
+        except ValueError:
+            errores.append("El precio debe ser un número válido.")
+
+        try:
+            stock = int(stock_str)
+            if stock < 0:
+                errores.append("El stock no puede ser negativo.")
+        except ValueError:
+            errores.append("El stock debe ser un número entero.")
+
+        if errores:
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
 
         flor = Flor.objects.create(
             nombre=nombre, descripcion=descripcion, color=color,
@@ -358,15 +203,33 @@ class FlorDetalleApiView(APIView):
 
     def put(self, request, id):
         flor = get_object_or_404(Flor, id=id)
-        nombre = request.data.get('nombre')
-        descripcion = request.data.get('descripcion')
-        color = request.data.get('color')
-        precio = request.data.get('precio')
-        stock = request.data.get('stock')
+        nombre = request.data.get('nombre', '').strip()
+        descripcion = request.data.get('descripcion', '').strip()
+        color = request.data.get('color', '').strip()
+        precio_str = request.data.get('precio', '0')
+        stock_str = request.data.get('stock', '0')
         disponible = request.data.get('disponible')
 
-        if nombre is None or descripcion is None or color is None or precio is None or stock is None or disponible is None:
-            return Response({'error': 'Debes enviar todos los campos'}, status=status.HTTP_400_BAD_REQUEST)
+        errores = []
+        if not nombre or not descripcion or not color or disponible is None:
+            errores.append("Todos los campos son obligatorios.")
+
+        try:
+            precio = int(precio_str)
+            if precio <= 0:
+                errores.append("El precio debe ser mayor a 0.")
+        except ValueError:
+            errores.append("El precio debe ser un número válido.")
+
+        try:
+            stock = int(stock_str)
+            if stock < 0:
+                errores.append("El stock no puede ser negativo.")
+        except ValueError:
+            errores.append("El stock debe ser un número entero.")
+
+        if errores:
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
 
         flor.nombre = nombre
         flor.descripcion = descripcion
@@ -379,9 +242,8 @@ class FlorDetalleApiView(APIView):
         return Response({'mensaje': 'Flor actualizada correctamente'}, status=status.HTTP_200_OK)
 
 
-# ---------------------------------------------------------------------
-# API CLIENTES
-# ---------------------------------------------------------------------
+# ------------------------
+# ----- API CLIENTES -----
 class ClienteApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -400,13 +262,19 @@ class ClienteApiView(APIView):
         return Response(datos, status=status.HTTP_200_OK)
 
     def post(self, request):
-        nombre = request.data.get('nombre')
-        email = request.data.get('email')
-        telefono = request.data.get('telefono')
-        direccion = request.data.get('direccion')
+        nombre = request.data.get('nombre', '').strip()
+        email = request.data.get('email', '').strip()
+        telefono = request.data.get('telefono', '').strip()
+        direccion = request.data.get('direccion', '').strip()
 
+        errores = []
         if not nombre or not email or not telefono or not direccion:
-            return Response({'error': 'Todos los campos son obligatorios'}, status=status.HTTP_400_BAD_REQUEST)
+            errores.append("Todos los campos del cliente son obligatorios.")
+        if "@" not in email or "." not in email:
+            errores.append("Debe ingresar un correo electrónico válido.")
+
+        if errores:
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
 
         cliente = Cliente.objects.create(nombre=nombre, email=email, telefono=telefono, direccion=direccion)
         return Response({
@@ -430,13 +298,19 @@ class ClienteDetalleApiView(APIView):
 
     def put(self, request, id):
         c = get_object_or_404(Cliente, id=id)
-        nombre = request.data.get('nombre')
-        email = request.data.get('email')
-        telefono = request.data.get('telefono')
-        direccion = request.data.get('direccion')
+        nombre = request.data.get('nombre', '').strip()
+        email = request.data.get('email', '').strip()
+        telefono = request.data.get('telefono', '').strip()
+        direccion = request.data.get('direccion', '').strip()
 
+        errores = []
         if not nombre or not email or not telefono or not direccion:
-            return Response({'error': 'Debes enviar todos los campos'}, status=status.HTTP_400_BAD_REQUEST)
+            errores.append("Todos los campos son obligatorios.")
+        if "@" not in email or "." not in email:
+            errores.append("Ingrese un correo válido.")
+
+        if errores:
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
 
         c.nombre = nombre
         c.email = email
@@ -446,9 +320,8 @@ class ClienteDetalleApiView(APIView):
         return Response({'mensaje': 'Cliente actualizado correctamente'}, status=status.HTTP_200_OK)
 
 
-# ---------------------------------------------------------------------
-# API PEDIDOS
-# ---------------------------------------------------------------------
+# -----------------------
+# ----- API PEDIDOS -----
 class PedidoApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -471,7 +344,7 @@ class PedidoApiView(APIView):
     def post(self, request):
         cliente_id = request.data.get('cliente_id')
         fecha_pedido = request.data.get('fecha_pedido')
-        direccion_entrega = request.data.get('direccion_entrega')
+        direccion_entrega = request.data.get('direccion_entrega', '').strip()
         estado = request.data.get('estado', 'Pendiente')
         total = request.data.get('total', 0)
 
@@ -526,11 +399,8 @@ class PedidoDetalleApiView(APIView):
         return Response({'mensaje': 'Pedido actualizado correctamente'}, status=status.HTTP_200_OK)
 
 
-
-
-# ---------------------------------------------------------------------
-# API DETALLES DE PEDIDO
-# ---------------------------------------------------------------------
+# ----------------------------------
+# ----- API DETALLES DE PEDIDO -----
 class DetallePedidoApiView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
