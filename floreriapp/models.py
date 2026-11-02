@@ -1,19 +1,19 @@
 from django.db import models
 
 class Flor(models.Model):
-    nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    color = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=20)
+    descripcion = models.TextField(max_length=20)
+    color = models.CharField(max_length=10)
     precio = models.IntegerField(default=0)
     stock = models.PositiveIntegerField(default=0)
     disponible = models.BooleanField(default=True)
 
 
 class Cliente(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=20)
-    direccion = models.CharField(max_length=200)
+    direccion = models.CharField(max_length=20)
 
 
 class Pedido(models.Model):
@@ -27,7 +27,7 @@ class Pedido(models.Model):
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField()
-    direccion_entrega = models.CharField(max_length=200)
+    direccion_entrega = models.CharField(max_length=20)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Pendiente')
     total = models.IntegerField(default=0)
 
