@@ -2,7 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.inicio, name='inicio'),
+    # ------------------ Principal / Autenticación ----------------------
+    path('', views.login_pagina, name='login'),
+    path('panel/', views.inicio, name='inicio'),
     
     # ------------------Flores----------------------
     path('flores/', views.listar_flores, name='listar_flores'),
@@ -30,9 +32,8 @@ urlpatterns = [
     path('detalles/crear/', views.crear_detalle, name='crear_detalle'),
     path('detalles/<int:detalle_id>/eliminar/', views.eliminar_detalle, name='eliminar_detalle'),
 
-    # -----------------------------------------------------------
-    #                          API REST
-    # -----------------------------------------------------------
+    # --------------------
+    # ----- API REST -----
     path('api/login/', views.LoginAPIView.as_view(), name='api_login'),
     
     # API Flores

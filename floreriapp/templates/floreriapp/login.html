@@ -114,7 +114,6 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
@@ -158,7 +157,6 @@
             border: 1px solid #f5c2c2;
         }
 
-        /* DISEÑO PARA CELULARES */
         @media (max-width: 480px) {
             .contenedor-login {
                 padding: 30px 22px;
@@ -242,10 +240,12 @@
                 if (respuesta.ok) {
                     sessionStorage.setItem('token', datos.token);
 
-                    mensaje.textContent = 'Inicio de sesión correcto';
+                    mensaje.textContent = 'Inicio de sesión correcto. Entrando al panel...';
                     mensaje.className = 'exito';
 
-                    window.location.href = '/';
+                    setTimeout(() => {
+                        window.location.href = '/panel/';
+                    }, 1000);
                 } else {
                     mensaje.textContent =
                         datos.error || 'Error al iniciar sesión';
