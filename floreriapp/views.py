@@ -11,7 +11,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import Flor, Cliente, Pedido, DetallePedido
 
+# ----- LOGIN -----
+def login_pagina(request):
+    return render(request, 'floreriapp/login.html')
 
+# ----- INICIO -----
 def inicio(request):
     flores = Flor.objects.all()
     return render(request, 'floreriapp/inicio.html', {'flores': flores})
