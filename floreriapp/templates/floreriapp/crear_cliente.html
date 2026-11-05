@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cliente</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,35 +20,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        ul {
-            background-color: #ffebee;
-            border-left: 4px solid #e53935;
-            padding: 12px 20px 12px 35px;
-            border-radius: 4px;
-            max-width: 420px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        form {
+        .contenedor-form {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 420px;
-            box-sizing: border-box;
             border-top: 5px solid #2e7d32;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .campo-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         label {
@@ -51,19 +59,17 @@
         }
 
         input[type="text"],
-        input[type="email"] {
+        input[type="email"],
+        input[type="tel"] {
             width: 100%;
             padding: 10px 12px;
-            margin-top: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box;
             font-size: 14px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus {
+        input:focus {
             border-color: #2e7d32;
             outline: none;
             box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
@@ -80,6 +86,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
         }
 
         button[type="submit"]:hover {
@@ -90,59 +97,122 @@
             transform: scale(0.99);
         }
 
-        a {
+        a.volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            margin-top: 15px;
+            margin-top: 25px;
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <h1>Registrar nuevo cliente</h1>
 
-    {% if errores %}
-        <ul style="color: red;">
-            {% for error in errores %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="contenedor-form">
+        <h1>Registrar nuevo cliente</h1>
 
-    <form method="POST">
-        {% csrf_token %}
+        <form id="formCrearCliente">
+            <div class="campo-grupo">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" maxlength="20" required>
+            </div>
 
-        <label for="nombre">Nombre completo:</label><br>
-        <input type="text" id="nombre" name="nombre" required>
+            <div class="campo-grupo">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" maxlength="30" required>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" maxlength="15" required>
+            </div>
 
-        <label for="email">Correo electrónico:</label><br>
-        <input type="email" id="email" name="email" required>
+            <div class="campo-grupo">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" maxlength="15" required>
+            </div>
 
-        <br><br>
+            <button type="submit">Guardar cliente</button>
+        </form>
 
-        <label for="telefono">Teléfono:</label><br>
-        <input type="text" id="telefono" name="telefono" required>
+        <p id="mensaje"></p>
+    </div>
 
-        <br><br>
+    <a href="{% url 'listar_clientes' %}" class="volver">Volver a la lista de clientes</a>
 
-        <label for="direccion">Dirección:</label><br>
-        <input type="text" id="direccion" name="direccion" required>
+    <script>
+        const formulario = document.getElementById('formCrearCliente');
+        const mensaje = document.getElementById('mensaje');
+        const token = sessionStorage.getItem('token');
 
-        <br><br>
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
 
-        <button type="submit">Guardar cliente</button>
-    </form>
+        formulario.addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-    <br>
-    <a href="{% url 'listar_clientes' %}">Volver a la lista de clientes</a>
+            const datosCliente = {
+                nombre: document.getElementById('nombre').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                direccion: document.getElementById('direccion').value.trim()
+            };
+
+            mensaje.style.display = 'block';
+            mensaje.style.color = '#555';
+            mensaje.style.backgroundColor = '#f4f4f4';
+            mensaje.textContent = 'Guardando cliente...';
+
+            try {
+                const respuesta = await fetch('/api/clientes/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    },
+                    body: JSON.stringify(datosCliente)
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.ok) {
+                    mensaje.style.color = '#1b5e20';
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.textContent = 'Cliente registrado correctamente.';
+                    
+                    setTimeout(() => {
+                        window.location.href = "{% url 'listar_clientes' %}";
+                    }, 1200);
+                } else {
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.textContent = datos.errores ? datos.errores.join(' ') : 'Error al guardar el cliente.';
+                }
+            } catch (error) {
+                mensaje.style.color = '#c62828';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
 </body>
 </html>

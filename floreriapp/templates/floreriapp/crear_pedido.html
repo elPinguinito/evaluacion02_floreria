@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Pedido</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,24 +20,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        form {
+        .contenedor-form {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 420px;
-            box-sizing: border-box;
             border-top: 5px solid #2e7d32;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .campo-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         label {
@@ -45,19 +64,15 @@
         select {
             width: 100%;
             padding: 10px 12px;
-            margin-top: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box;
             font-size: 14px;
             background-color: #fff;
             font-family: inherit;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        input[type="number"]:focus,
+        input:focus,
         select:focus {
             border-color: #2e7d32;
             outline: none;
@@ -75,6 +90,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
         }
 
         button[type="submit"]:hover {
@@ -85,65 +101,137 @@
             transform: scale(0.99);
         }
 
-        a {
+        a.volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            margin-top: 15px;
+            margin-top: 25px;
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <h1>Crear nuevo pedido</h1>
 
-    <form method="POST">
-        {% csrf_token %}
+    <div class="contenedor-form">
+        <h1>Crear nuevo pedido</h1>
 
-        <label for="cliente">Cliente:</label><br>
-        <select id="cliente" name="cliente" required>
-            <option value="">-- Seleccione un cliente --</option>
-            {% for cliente in clientes %}
-                <option value="{{ cliente.id }}">{{ cliente.nombre }} ({{ cliente.email }})</option>
-            {% endfor %}
-        </select>
+        <form id="formCrearPedido">
+            <div class="campo-grupo">
+                <label for="cliente">Cliente:</label>
+                <select id="cliente" name="cliente" required>
+                    <option value="">-- Seleccione un cliente --</option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}">{{ cliente.nombre }} ({{ cliente.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="fecha_pedido">Fecha de pedido:</label>
+                <input type="date" id="fecha_pedido" name="fecha_pedido" required>
+            </div>
 
-        <label for="fecha_pedido">Fecha de pedido:</label><br>
-        <input type="date" id="fecha_pedido" name="fecha_pedido" required>
+            <div class="campo-grupo">
+                <label for="direccion_entrega">Dirección de entrega:</label>
+                <input type="text" id="direccion_entrega" name="direccion_entrega" maxlength="30" required>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="estado">Estado del pedido:</label>
+                <select id="estado" name="estado" required>
+                    {% for valor, etiqueta in estados %}
+                        <option value="{{ valor }}">{{ etiqueta }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <label for="direccion_entrega">Dirección de entrega:</label><br>
-        <input type="text" id="direccion_entrega" name="direccion_entrega" required>
+            <div class="campo-grupo">
+                <label for="total">Total ($):</label>
+                <input type="number" id="total" name="total" value="0" min="0" max="100000" required>
+            </div>
 
-        <br><br>
+            <button type="submit">Guardar pedido</button>
+        </form>
 
-        <label for="estado">Estado del pedido:</label><br>
-        <select id="estado" name="estado" required>
-            {% for valor, etiqueta in estados %}
-                <option value="{{ valor }}">{{ etiqueta }}</option>
-            {% endfor %}
-        </select>
+        <p id="mensaje"></p>
+    </div>
 
-        <br><br>
+    <a href="{% url 'listar_pedidos' %}" class="volver">Volver a la lista de pedidos</a>
 
-        <label for="total">Total ($):</label><br>
-        <input type="number" id="total" name="total" value="0" min="0" required>
+    <script>
+        const formulario = document.getElementById('formCrearPedido');
+        const mensaje = document.getElementById('mensaje');
+        const token = sessionStorage.getItem('token');
 
-        <br><br>
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
 
-        <button type="submit">Guardar pedido</button>
-    </form>
+        formulario.addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-    <br>
-    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+            const datosPedido = {
+                cliente_id: parseInt(document.getElementById('cliente').value),
+                fecha_pedido: document.getElementById('fecha_pedido').value,
+                direccion_entrega: document.getElementById('direccion_entrega').value.trim(),
+                estado: document.getElementById('estado').value,
+                total: parseInt(document.getElementById('total').value)
+            };
+
+            mensaje.style.display = 'block';
+            mensaje.style.color = '#555';
+            mensaje.style.backgroundColor = '#f4f4f4';
+            mensaje.textContent = 'Guardando pedido...';
+
+            try {
+                const respuesta = await fetch('/api/pedidos/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    },
+                    body: JSON.stringify(datosPedido)
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.ok) {
+                    mensaje.style.color = '#1b5e20';
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.textContent = 'Pedido registrado correctamente.';
+                    
+                    setTimeout(() => {
+                        window.location.href = "{% url 'listar_pedidos' %}";
+                    }, 1200);
+                } else {
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.textContent = datos.error || 'Error al guardar el pedido.';
+                }
+            } catch (error) {
+                mensaje.style.color = '#c62828';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de Flor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Flor - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,49 +20,89 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+        }
+
+        .contenedor-detalle {
+            background-color: #ffffff;
+            padding: 35px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+            border-top: 5px solid #2e7d32;
+            display: none;
         }
 
         h1 {
             color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
+            margin-bottom: 25px;
+            font-size: 24px;
             text-align: center;
         }
 
-        .card-detalle {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 420px;
-            box-sizing: border-box;
-            border-top: 5px solid #2e7d32;
-        }
-
-        p {
-            font-size: 15px;
-            line-height: 1.6;
-            margin: 12px 0;
-            color: #444;
+        .fila-detalle {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
             border-bottom: 1px dashed #e0e0e0;
-            padding-bottom: 8px;
         }
 
-        p:last-of-type {
+        .fila-detalle:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
-        strong {
-            color: #2c5e3b;
+        .etiqueta {
+            font-size: 13px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .valor {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+            word-break: break-word;
         }
 
         .acciones {
-            margin-top: 20px;
-            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        a {
+        a.btn-editar {
+            display: block;
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        a.btn-editar:hover {
+            background-color: #1b5e20;
+        }
+
+        a.btn-editar:active {
+            transform: scale(0.99);
+        }
+
+        a.btn-volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
@@ -63,28 +110,117 @@
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.btn-volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje-carga {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #mensaje-error {
+            display: none;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            max-width: 450px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="card-detalle">
-        <h1>Detalle de: {{ flor.nombre }}</h1>
 
-        <p><strong>ID:</strong> {{ flor.id }}</p>
-        <p><strong>Descripción:</strong> {{ flor.descripcion }}</p>
-        <p><strong>Color:</strong> {{ flor.color }}</p>
-        <p><strong>Precio:</strong> ${{ flor.precio }}</p>
-        <p><strong>Stock:</strong> {{ flor.stock }} unidades</p>
-        <p><strong>Disponible:</strong> {% if flor.disponible %}Sí{% else %}No{% endif %}</p>
+    <div id="mensaje-carga">Cargando información de la flor...</div>
+    <div id="mensaje-error">No se pudo cargar la información. Verifique su conexión.</div>
+
+    <div class="contenedor-detalle" id="contenedor-detalle">
+        <h1 id="titulo-flor">Cargando...</h1>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">ID de Flor</span>
+            <span class="valor" id="val-id"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Descripción</span>
+            <span class="valor" id="val-descripcion"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Color</span>
+            <span class="valor" id="val-color"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Precio</span>
+            <span class="valor" id="val-precio"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Stock</span>
+            <span class="valor" id="val-stock"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Disponible</span>
+            <span class="valor" id="val-disponible"></span>
+        </div>
 
         <div class="acciones">
-            <br>
-            <a href="{% url 'editar_flor' flor.id %}">Editar esta flor</a> |
-            <a href="{% url 'listar_flores' %}">Volver a la lista de flores</a>
+            <a href="{% url 'editar_flor' flor.id %}" class="btn-editar">Editar esta flor</a>
+            <a href="{% url 'listar_flores' %}" class="btn-volver">Volver a la lista de flores</a>
         </div>
     </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+        const florId = "{{ flor.id }}";
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarDatosFlor() {
+            try {
+                const respuesta = await fetch(`/api/flores/${florId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const datos = await respuesta.json();
+                    
+                    document.getElementById('titulo-flor').textContent = 'Flor: ' + datos.nombre;
+                    document.getElementById('val-id').textContent = datos.id;
+                    document.getElementById('val-descripcion').textContent = datos.descripcion;
+                    document.getElementById('val-color').textContent = datos.color;
+                    document.getElementById('val-precio').textContent = '$' + datos.precio;
+                    document.getElementById('val-stock').textContent = datos.stock + ' unidades';
+                    document.getElementById('val-disponible').textContent = datos.disponible ? 'Sí' : 'No';
+
+                    document.getElementById('mensaje-carga').style.display = 'none';
+                    document.getElementById('contenedor-detalle').style.display = 'block';
+                } else {
+                    document.getElementById('mensaje-carga').style.display = 'none';
+                    document.getElementById('mensaje-error').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('mensaje-carga').style.display = 'none';
+                document.getElementById('mensaje-error').style.display = 'block';
+            }
+        }
+
+        cargarDatosFlor();
+    </script>
 </body>
 </html>
