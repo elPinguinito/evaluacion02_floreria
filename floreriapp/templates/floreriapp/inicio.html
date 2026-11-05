@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,6 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .container {
@@ -22,13 +30,11 @@
             padding: 35px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            box-sizing: border-box;
             border-top: 6px solid #2e7d32;
         }
 
         h1 {
             color: #2c5e3b;
-            margin-top: 0;
             margin-bottom: 10px;
             font-size: 30px;
             text-align: center;
@@ -155,29 +161,66 @@
                     <th>Estado</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for flor in flores %}
-                    <tr>
-                        <td>{{ flor.id }}</td>
-                        <td><strong>{{ flor.nombre }}</strong></td>
-                        <td>{{ flor.color }}</td>
-                        <td>${{ flor.precio }}</td>
-                        <td>{{ flor.stock }}</td>
-                        <td>
-                            {% if flor.disponible %}
-                                <span class="badge-disponible">Disponible</span>
-                            {% else %}
-                                <span class="badge-nodisponible">No disponible</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #777;">No hay flores registradas en la base de datos.</td>
-                    </tr>
-                {% endfor %}
+            <tbody id="tabla-flores-body">
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #777;">Cargando catálogo...</td>
+                </tr>
             </tbody>
         </table>
     </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarFlores() {
+            const tbody = document.getElementById('tabla-flores-body');
+
+            try {
+                const respuesta = await fetch('/api/flores/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const flores = await respuesta.json();
+                    tbody.innerHTML = '';
+
+                    if (flores.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #777;">No hay flores registradas en la base de datos.</td></tr>';
+                    } else {
+                        flores.forEach(flor => {
+                            const tr = document.createElement('tr');
+                            const badge = flor.disponible 
+                                ? '<span class="badge-disponible">Disponible</span>' 
+                                : '<span class="badge-nodisponible">No disponible</span>';
+
+                            tr.innerHTML = `
+                                <td>${flor.id}</td>
+                                <td><strong>${flor.nombre}</strong></td>
+                                <td>${flor.color}</td>
+                                <td>$${flor.precio}</td>
+                                <td>${flor.stock}</td>
+                                <td>${badge}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #c62828;">Error al cargar las flores del servidor.</td></tr>';
+                }
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #c62828;">Error de conexión con el servidor.</td></tr>';
+            }
+        }
+
+        cargarFlores();
+    </script>
 </body>
 </html>

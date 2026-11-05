@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Flor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Flor - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,35 +20,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        ul {
-            background-color: #ffebee;
-            border-left: 4px solid #e53935;
-            padding: 12px 20px 12px 35px;
-            border-radius: 4px;
-            max-width: 420px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        form {
+        .contenedor-form {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 420px;
-            box-sizing: border-box;
             border-top: 5px solid #2e7d32;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .campo-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         label {
@@ -55,10 +63,8 @@
         textarea {
             width: 100%;
             padding: 10px 12px;
-            margin-top: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box;
             font-size: 14px;
             font-family: inherit;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -69,18 +75,23 @@
             min-height: 80px;
         }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
+        input:focus,
         textarea:focus {
             border-color: #2e7d32;
             outline: none;
             box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
         }
 
+        .checkbox-grupo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
         input[type="checkbox"] {
             accent-color: #2e7d32;
             transform: scale(1.1);
-            margin-right: 6px;
             cursor: pointer;
         }
 
@@ -95,6 +106,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
         }
 
         button[type="submit"]:hover {
@@ -105,82 +117,134 @@
             transform: scale(0.99);
         }
 
-        a {
+        a.volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            margin-top: 15px;
+            margin-top: 25px;
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <h1>Crear nueva flor</h1>
 
-    {% if errores %}
-        <ul style="color: red;">
-            {% for error in errores %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="contenedor-form">
+        <h1>Crear nueva flor</h1>
 
-    <form method="POST">
+        <form id="formCrearFlor">
+            <div class="campo-grupo">
+                <label for="nombre">Nombre de la flor:</label>
+                <input type="text" id="nombre" name="nombre" maxlength="20" required>
+            </div>
 
-        {% csrf_token %}
+            <div class="campo-grupo">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" maxlength="50" required></textarea>
+            </div>
 
-        <label for="nombre">Nombre de la flor:</label>
-        <br>
-        <input type="text" id="nombre" name="nombre" required>
+            <div class="campo-grupo">
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" maxlength="15" required>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="precio">Precio ($):</label>
+                <input type="number" id="precio" name="precio" min="1" max="10000" required>
+            </div>
 
-        <label for="descripcion">Descripción:</label>
-        <br>
-        <textarea id="descripcion" name="descripcion" required></textarea>
+            <div class="campo-grupo">
+                <label for="stock">Stock disponible:</label>
+                <input type="number" id="stock" name="stock" min="0" max="1000" value="0" required>
+            </div>
 
-        <br><br>
+            <div class="checkbox-grupo">
+                <input type="checkbox" name="disponible" id="disponible" checked>
+                <label for="disponible" style="cursor: pointer;">Flor disponible para la venta</label>
+            </div>
 
-        <label for="color">Color:</label>
-        <br>
-        <input type="text" id="color" name="color" required>
+            <button type="submit">Guardar flor</button>
+        </form>
 
-        <br><br>
+        <p id="mensaje"></p>
+    </div>
 
-        <label for="precio">Precio ($):</label>
-        <br>
-        <input type="number" id="precio" name="precio" min="1" required>
+    <a href="{% url 'listar_flores' %}" class="volver">Volver a la lista de flores</a>
 
-        <br><br>
+    <script>
+        const formulario = document.getElementById('formCrearFlor');
+        const mensaje = document.getElementById('mensaje');
+        const token = sessionStorage.getItem('token');
 
-        <label for="stock">Stock disponible:</label>
-        <br>
-        <input type="number" id="stock" name="stock" min="0" value="0" required>
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
 
-        <br><br>
+        formulario.addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-        <label>
-            <input type="checkbox" name="disponible" id="disponible" checked>
-            Flor disponible para la venta
-        </label>
+            const datosFlor = {
+                nombre: document.getElementById('nombre').value.trim(),
+                descripcion: document.getElementById('descripcion').value.trim(),
+                color: document.getElementById('color').value.trim(),
+                precio: parseInt(document.getElementById('precio').value),
+                stock: parseInt(document.getElementById('stock').value),
+                disponible: document.getElementById('disponible').checked
+            };
 
-        <br><br>
+            mensaje.style.display = 'block';
+            mensaje.style.color = '#555';
+            mensaje.style.backgroundColor = '#f4f4f4';
+            mensaje.textContent = 'Guardando flor...';
 
-        <button type="submit">
-            Guardar flor
-        </button>
+            try {
+                const respuesta = await fetch('/api/flores/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    },
+                    body: JSON.stringify(datosFlor)
+                });
 
-    </form>
+                const datos = await respuesta.json();
 
-    <br>
-
-    <a href="{% url 'listar_flores' %}">Volver a la lista de flores</a>
-
+                if (respuesta.ok) {
+                    mensaje.style.color = '#1b5e20';
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.textContent = 'Flor registrada correctamente.';
+                    
+                    setTimeout(() => {
+                        window.location.href = "{% url 'listar_flores' %}";
+                    }, 1200);
+                } else {
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.textContent = datos.errores ? datos.errores.join(' ') : 'Error al guardar la flor.';
+                }
+            } catch (error) {
+                mensaje.style.color = '#c62828';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
 </body>
 </html>

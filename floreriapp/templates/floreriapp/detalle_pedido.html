@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de Pedido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Pedido - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,37 +20,49 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+        }
+
+        .contenedor-detalle {
+            background-color: #ffffff;
+            padding: 35px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 580px;
+            border-top: 5px solid #2e7d32;
+            display: none;
         }
 
         h1 {
             color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
+            margin-bottom: 25px;
+            font-size: 24px;
             text-align: center;
         }
 
-        .card-detalle {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 550px;
-            box-sizing: border-box;
-            border-top: 5px solid #2e7d32;
-        }
-
-        p {
-            font-size: 15px;
-            line-height: 1.6;
-            margin: 12px 0;
-            color: #444;
-            border-bottom: 1px dashed #e0e0e0;
+        .fila-detalle {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
             padding-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
         }
 
-        strong {
-            color: #2c5e3b;
+        .etiqueta {
+            font-size: 13px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .valor {
+            font-size: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+            word-break: break-word;
         }
 
         hr {
@@ -85,11 +104,37 @@
         }
 
         .acciones {
-            margin-top: 20px;
-            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        a {
+        a.btn-editar {
+            display: block;
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        a.btn-editar:hover {
+            background-color: #1b5e20;
+        }
+
+        a.btn-editar:active {
+            transform: scale(0.99);
+        }
+
+        a.btn-volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
@@ -97,21 +142,63 @@
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.btn-volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje-carga {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #mensaje-error {
+            display: none;
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            max-width: 580px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="card-detalle">
-        <h1>Detalle del Pedido #{{ pedido.id }}</h1>
 
-        <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
-        <p><strong>Fecha:</strong> {{ pedido.fecha_pedido }}</p>
-        <p><strong>Dirección de entrega:</strong> {{ pedido.direccion_entrega }}</p>
-        <p><strong>Estado:</strong> {{ pedido.estado }}</p>
-        <p><strong>Total:</strong> ${{ pedido.total }}</p>
+    <div id="mensaje-carga">Cargando información del pedido...</div>
+    <div id="mensaje-error">No se pudo cargar la información. Verifique su conexión.</div>
+
+    <div class="contenedor-detalle" id="contenedor-detalle">
+        <h1 id="titulo-pedido">Cargando...</h1>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Cliente</span>
+            <span class="valor" id="val-cliente"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Fecha</span>
+            <span class="valor" id="val-fecha"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Dirección de entrega</span>
+            <span class="valor" id="val-direccion"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Estado</span>
+            <span class="valor" id="val-estado"></span>
+        </div>
+
+        <div class="fila-detalle">
+            <span class="etiqueta">Total</span>
+            <span class="valor" id="val-total"></span>
+        </div>
 
         <hr>
 
@@ -124,26 +211,104 @@
                     <th>Precio Unitario</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for detalle in pedido.detallepedido_set.all %}
-                    <tr>
-                        <td>{{ detalle.flor.nombre }}</td>
-                        <td>{{ detalle.cantidad }}</td>
-                        <td>${{ detalle.precio_unitario }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #777;">Este pedido no tiene flores agregadas aún.</td>
-                    </tr>
-                {% endfor %}
+            <tbody id="tabla-detalles-body">
             </tbody>
         </table>
 
         <div class="acciones">
-            <br>
-            <a href="{% url 'editar_pedido' pedido.id %}">Editar este pedido</a> |
-            <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+            <a href="{% url 'editar_pedido' pedido.id %}" class="btn-editar">Editar este pedido</a>
+            <a href="{% url 'listar_pedidos' %}" class="btn-volver">Volver a la lista de pedidos</a>
         </div>
     </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+        const pedidoId = "{{ pedido.id }}";
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarDatosPedido() {
+            try {
+                const respuestaPedido = await fetch(`/api/pedidos/${pedidoId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (!respuestaPedido.ok) {
+                    throw new Error('Error al cargar pedido');
+                }
+
+                const datosPedido = await respuestaPedido.json();
+
+                let nombreCliente = 'Cliente #' + datosPedido.cliente_id;
+                try {
+                    const respuestaCliente = await fetch(`/api/clientes/${datosPedido.cliente_id}/`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Token ' + token
+                        }
+                    });
+                    if (respuestaCliente.ok) {
+                        const datosCliente = await respuestaCliente.json();
+                        nombreCliente = datosCliente.nombre;
+                    }
+                } catch (e) {}
+
+                document.getElementById('titulo-pedido').textContent = 'Detalle del Pedido #' + datosPedido.id;
+                document.getElementById('val-cliente').textContent = nombreCliente;
+                document.getElementById('val-fecha').textContent = datosPedido.fecha_pedido;
+                document.getElementById('val-direccion').textContent = datosPedido.direccion_entrega;
+                document.getElementById('val-estado').textContent = datosPedido.estado;
+                document.getElementById('val-total').textContent = '$' + datosPedido.total;
+
+                const respuestaDetalles = await fetch('/api/detalles/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                const tbody = document.getElementById('tabla-detalles-body');
+                tbody.innerHTML = '';
+
+                if (respuestaDetalles.ok) {
+                    const todosDetalles = await respuestaDetalles.json();
+                    const detallesPedido = todosDetalles.filter(d => d.pedido_id === parseInt(pedidoId));
+
+                    if (detallesPedido.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #777;">Este pedido no tiene flores agregadas aún.</td></tr>';
+                    } else {
+                        detallesPedido.forEach(d => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${d.flor_nombre}</td>
+                                <td>${d.cantidad}</td>
+                                <td>$${d.precio_unitario}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #777;">Este pedido no tiene flores agregadas aún.</td></tr>';
+                }
+
+                document.getElementById('mensaje-carga').style.display = 'none';
+                document.getElementById('contenedor-detalle').style.display = 'block';
+
+            } catch (error) {
+                document.getElementById('mensaje-carga').style.display = 'none';
+                document.getElementById('mensaje-error').style.display = 'block';
+            }
+        }
+
+        cargarDatosPedido();
+    </script>
 </body>
 </html>
