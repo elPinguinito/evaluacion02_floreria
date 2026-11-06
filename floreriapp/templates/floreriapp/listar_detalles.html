@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Detalles de Pedido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Detalles de Pedido - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,6 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .container {
@@ -22,13 +30,11 @@
             padding: 35px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            box-sizing: border-box;
             border-top: 6px solid #2e7d32;
         }
 
         h1 {
             color: #2c5e3b;
-            margin-top: 0;
             margin-bottom: 20px;
             font-size: 28px;
             text-align: center;
@@ -127,28 +133,91 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for detalle in detalles %}
-                    <tr>
-                        <td>{{ detalle.id }}</td>
-                        <td><strong>#{{ detalle.pedido.id }}</strong></td>
-                        <td>{{ detalle.pedido.cliente.nombre }}</td>
-                        <td>{{ detalle.flor.nombre }}</td>
-                        <td>{{ detalle.cantidad }}</td>
-                        <td>${{ detalle.precio_unitario }}</td>
-                        <td class="acciones-cell">
-                            <a href="{% url 'eliminar_detalle' detalle.id %}">Eliminar</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: #777;">No hay detalles registrados.</td>
-                    </tr>
-                {% endfor %}
+            <tbody id="tabla-detalles-body">
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #777;">Cargando detalles de pedidos...</td>
+                </tr>
             </tbody>
         </table>
 
         <a href="{% url 'inicio' %}" class="volver-link">Volver al inicio</a>
     </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarDetalles() {
+            const tbody = document.getElementById('tabla-detalles-body');
+            const urlEliminarBase = "{% url 'eliminar_detalle' 0 %}";
+
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + token
+                };
+
+                const [respDetalles, respPedidos, respClientes] = await Promise.all([
+                    fetch('/api/detalles/', { headers }),
+                    fetch('/api/pedidos/', { headers }).catch(() => null),
+                    fetch('/api/clientes/', { headers }).catch(() => null)
+                ]);
+
+                if (respDetalles.ok) {
+                    const detalles = await respDetalles.json();
+
+                    let mapaPedidos = {};
+                    let mapaClientes = {};
+
+                    if (respPedidos && respPedidos.ok) {
+                        const pedidos = await respPedidos.json();
+                        pedidos.forEach(p => mapaPedidos[p.id] = p.cliente_id);
+                    }
+
+                    if (respClientes && respClientes.ok) {
+                        const clientes = await respClientes.json();
+                        clientes.forEach(c => mapaClientes[c.id] = c.nombre);
+                    }
+
+                    tbody.innerHTML = '';
+
+                    if (detalles.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #777;">No hay detalles registrados.</td></tr>';
+                    } else {
+                        detalles.forEach(detalle => {
+                            const tr = document.createElement('tr');
+                            const urlEliminar = urlEliminarBase.replace('0', detalle.id);
+
+                            const clienteId = mapaPedidos[detalle.pedido_id];
+                            const nombreCliente = mapaClientes[clienteId] || 'N/A';
+                            const nombreFlor = detalle.flor_nombre || `Flor #${detalle.flor_id}`;
+
+                            tr.innerHTML = `
+                                <td>${detalle.id}</td>
+                                <td><strong>#${detalle.pedido_id}</strong></td>
+                                <td>${nombreCliente}</td>
+                                <td>${nombreFlor}</td>
+                                <td>${detalle.cantidad}</td>
+                                <td>$${detalle.precio_unitario}</td>
+                                <td class="acciones-cell">
+                                    <a href="${urlEliminar}">Eliminar</a>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #c62828;">Error al cargar la lista de detalles.</td></tr>';
+                }
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #c62828;">Error de conexión con el servidor.</td></tr>';
+            }
+        }
+
+        cargarDetalles();
+    </script>
 </body>
 </html>

@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Eliminar Detalle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Detalle - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,6 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         h1 {
@@ -29,7 +37,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 420px;
-            box-sizing: border-box;
             border-top: 5px solid #c62828;
             text-align: center;
         }
@@ -80,20 +87,96 @@
             color: #2e7d32;
             text-decoration: underline;
         }
+
+        #mensaje {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
     <div class="card-eliminar">
         <h1>¿Estás seguro de eliminar este ítem del pedido?</h1>
-        <p>Eliminarás <strong>{{ detalle.cantidad }}x {{ detalle.flor.nombre }}</strong> del <strong>Pedido #{{ detalle.pedido.id }}</strong>.</p>
+        <p>Eliminarás <strong id="info-detalle">{{ detalle.cantidad }}x {{ detalle.flor.nombre }} del Pedido #{{ detalle.pedido.id }}</strong>.</p>
 
-        <form method="POST">
-            {% csrf_token %}
+        <form id="formEliminarDetalle">
             <button type="submit">Sí, eliminar ítem</button>
         </form>
 
-        <br>
+        <p id="mensaje"></p>
+
         <a href="{% url 'listar_detalles' %}">Cancelar y volver</a>
     </div>
+
+    <script>
+        const formulario = document.getElementById('formEliminarDetalle');
+        const mensaje = document.getElementById('mensaje');
+        const token = sessionStorage.getItem('token');
+        const detalleId = "{{ detalle.id }}";
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarDatosDetalle() {
+            try {
+                const respuesta = await fetch(`/api/detalles/${detalleId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const datos = await respuesta.json();
+                    document.getElementById('info-detalle').textContent = `${datos.cantidad}x ${datos.flor_nombre} del Pedido #${datos.pedido_id}`;
+                }
+            } catch (error) {}
+        }
+
+        cargarDatosDetalle();
+
+        formulario.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            mensaje.style.display = 'block';
+            mensaje.style.color = '#555';
+            mensaje.style.backgroundColor = '#f4f4f4';
+            mensaje.textContent = 'Eliminando detalle...';
+
+            try {
+                const respuesta = await fetch(`/api/detalles/${detalleId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (respuesta.ok) {
+                    mensaje.style.color = '#1b5e20';
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.textContent = 'Ítem eliminado correctamente.';
+                    
+                    setTimeout(() => {
+                        window.location.href = "{% url 'listar_detalles' %}";
+                    }, 1200);
+                } else {
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.textContent = 'Error al eliminar el ítem del pedido.';
+                }
+            } catch (error) {
+                mensaje.style.color = '#c62828';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
 </body>
 </html>
