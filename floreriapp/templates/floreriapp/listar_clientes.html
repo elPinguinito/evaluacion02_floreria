@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Clientes - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,6 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .container {
@@ -22,13 +30,11 @@
             padding: 35px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            box-sizing: border-box;
             border-top: 6px solid #2e7d32;
         }
 
         h1 {
             color: #2c5e3b;
-            margin-top: 0;
             margin-bottom: 20px;
             font-size: 28px;
             text-align: center;
@@ -135,29 +141,76 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for cliente in clientes %}
-                    <tr>
-                        <td>{{ cliente.id }}</td>
-                        <td><strong>{{ cliente.nombre }}</strong></td>
-                        <td>{{ cliente.email }}</td>
-                        <td>{{ cliente.telefono }}</td>
-                        <td>{{ cliente.direccion }}</td>
-                        <td class="acciones-cell">
-                            <a href="{% url 'detalle_cliente' cliente.id %}">Ver</a> |
-                            <a href="{% url 'editar_cliente' cliente.id %}">Editar</a> |
-                            <a href="{% url 'eliminar_cliente' cliente.id %}" class="eliminar">Eliminar</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #777;">No hay clientes registrados.</td>
-                    </tr>
-                {% endfor %}
+            <tbody id="tabla-clientes-body">
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #777;">Cargando lista de clientes...</td>
+                </tr>
             </tbody>
         </table>
 
         <a href="{% url 'inicio' %}" class="volver-link">Volver al inicio</a>
     </div>
+
+    <script>
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
+
+        async function cargarClientes() {
+            const tbody = document.getElementById('tabla-clientes-body');
+            const urlDetalleBase = "{% url 'detalle_cliente' 0 %}";
+            const urlEditarBase = "{% url 'editar_cliente' 0 %}";
+            const urlEliminarBase = "{% url 'eliminar_cliente' 0 %}";
+
+            try {
+                const respuesta = await fetch('/api/clientes/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
+
+                if (respuesta.ok) {
+                    const clientes = await respuesta.json();
+                    tbody.innerHTML = '';
+
+                    if (clientes.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #777;">No hay clientes registrados.</td></tr>';
+                    } else {
+                        clientes.forEach(cliente => {
+                            const tr = document.createElement('tr');
+
+                            const urlDetalle = urlDetalleBase.replace('0', cliente.id);
+                            const urlEditar = urlEditarBase.replace('0', cliente.id);
+                            const urlEliminar = urlEliminarBase.replace('0', cliente.id);
+
+                            tr.innerHTML = `
+                                <td>${cliente.id}</td>
+                                <td><strong>${cliente.nombre}</strong></td>
+                                <td>${cliente.email}</td>
+                                <td>${cliente.telefono}</td>
+                                <td>${cliente.direccion}</td>
+                                <td class="acciones-cell">
+                                    <a href="${urlDetalle}">Ver</a> |
+                                    <a href="${urlEditar}">Editar</a> |
+                                    <a href="${urlEliminar}" class="eliminar">Eliminar</a>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #c62828;">Error al cargar la lista de clientes.</td></tr>';
+                }
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #c62828;">Error de conexión con el servidor.</td></tr>';
+            }
+        }
+
+        cargarClientes();
+    </script>
 </body>
 </html>

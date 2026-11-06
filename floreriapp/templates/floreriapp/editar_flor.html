@@ -2,8 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Flor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Flor - Florería</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
@@ -13,35 +20,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: #2c5e3b;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        ul {
-            background-color: #ffebee;
-            border-left: 4px solid #e53935;
-            padding: 12px 20px 12px 35px;
-            border-radius: 4px;
-            max-width: 420px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        form {
+        .contenedor-form {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 420px;
-            box-sizing: border-box;
             border-top: 5px solid #2e7d32;
+        }
+
+        h1 {
+            color: #2c5e3b;
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .campo-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
         label {
@@ -55,10 +63,8 @@
         textarea {
             width: 100%;
             padding: 10px 12px;
-            margin-top: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box;
             font-size: 14px;
             font-family: inherit;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -69,18 +75,23 @@
             min-height: 80px;
         }
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
+        input:focus,
         textarea:focus {
             border-color: #2e7d32;
             outline: none;
             box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
         }
 
+        .checkbox-grupo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
         input[type="checkbox"] {
             accent-color: #2e7d32;
             transform: scale(1.1);
-            margin-right: 6px;
             cursor: pointer;
         }
 
@@ -95,6 +106,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
         }
 
         button[type="submit"]:hover {
@@ -105,71 +117,162 @@
             transform: scale(0.99);
         }
 
-        a {
+        a.volver {
+            display: block;
+            text-align: center;
             color: #2e7d32;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
-            margin-top: 15px;
+            margin-top: 25px;
             transition: color 0.2s ease;
         }
 
-        a:hover {
+        a.volver:hover {
             color: #1b5e20;
             text-decoration: underline;
+        }
+
+        #mensaje {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <h1>Editar flor: {{ flor.nombre }}</h1>
 
-    {% if errores %}
-        <ul style="color: red;">
-            {% for error in errores %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="contenedor-form">
+        <h1 id="titulo-editar">Editar flor</h1>
 
-    <form method="POST">
-        {% csrf_token %}
+        <form id="formEditarFlor">
+            <div class="campo-grupo">
+                <label for="nombre">Nombre de la flor:</label>
+                <input type="text" id="nombre" name="nombre" maxlength="20" value="{{ flor.nombre }}" required>
+            </div>
 
-        <label for="nombre">Nombre de la flor:</label><br>
-        <input type="text" id="nombre" name="nombre" value="{{ flor.nombre }}" required>
+            <div class="campo-grupo">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" maxlength="200" required>{{ flor.descripcion }}</textarea>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" maxlength="30" value="{{ flor.color }}" required>
+            </div>
 
-        <label for="descripcion">Descripción:</label><br>
-        <textarea id="descripcion" name="descripcion" required>{{ flor.descripcion }}</textarea>
+            <div class="campo-grupo">
+                <label for="precio">Precio ($):</label>
+                <input type="number" id="precio" name="precio" value="{{ flor.precio }}" min="1" max="10000000" required>
+            </div>
 
-        <br><br>
+            <div class="campo-grupo">
+                <label for="stock">Stock disponible:</label>
+                <input type="number" id="stock" name="stock" value="{{ flor.stock }}" min="0" max="100000" required>
+            </div>
 
-        <label for="color">Color:</label><br>
-        <input type="text" id="color" name="color" value="{{ flor.color }}" required>
+            <div class="checkbox-grupo">
+                <input type="checkbox" name="disponible" id="disponible" {% if flor.disponible %}checked{% endif %}>
+                <label for="disponible" style="cursor: pointer;">Flor disponible para la venta</label>
+            </div>
 
-        <br><br>
+            <button type="submit">Actualizar flor</button>
+        </form>
 
-        <label for="precio">Precio ($):</label><br>
-        <input type="number" id="precio" name="precio" value="{{ flor.precio }}" min="1" required>
+        <p id="mensaje"></p>
+    </div>
 
-        <br><br>
+    <a href="{% url 'listar_flores' %}" class="volver">Volver a la lista de flores</a>
 
-        <label for="stock">Stock disponible:</label><br>
-        <input type="number" id="stock" name="stock" value="{{ flor.stock }}" min="0" required>
+    <script>
+        const formulario = document.getElementById('formEditarFlor');
+        const mensaje = document.getElementById('mensaje');
+        const token = sessionStorage.getItem('token');
+        const florId = "{{ flor.id }}";
 
-        <br><br>
+        if (!token) {
+            window.location.href = "{% url 'login' %}";
+        }
 
-        <label>
-            <input type="checkbox" name="disponible" id="disponible" {% if flor.disponible %}checked{% endif %}>
-            Flor disponible para la venta
-        </label>
+        async function cargarDatosFlor() {
+            try {
+                const respuesta = await fetch(`/api/flores/${florId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                });
 
-        <br><br>
+                if (respuesta.ok) {
+                    const datos = await respuesta.json();
+                    document.getElementById('titulo-editar').textContent = 'Editar flor: ' + datos.nombre;
+                    document.getElementById('nombre').value = datos.nombre;
+                    document.getElementById('descripcion').value = datos.descripcion;
+                    document.getElementById('color').value = datos.color;
+                    document.getElementById('precio').value = datos.precio;
+                    document.getElementById('stock').value = datos.stock;
+                    document.getElementById('disponible').checked = datos.disponible;
+                }
+            } catch (error) {
+                console.error('Error al cargar los datos de la flor:', error);
+            }
+        }
 
-        <button type="submit">Actualizar flor</button>
-    </form>
+        cargarDatosFlor();
 
-    <br>
-    <a href="{% url 'listar_flores' %}">Volver a la lista de flores</a>
+        formulario.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const datosFlor = {
+                nombre: document.getElementById('nombre').value.trim(),
+                descripcion: document.getElementById('descripcion').value.trim(),
+                color: document.getElementById('color').value.trim(),
+                precio: parseInt(document.getElementById('precio').value),
+                stock: parseInt(document.getElementById('stock').value),
+                disponible: document.getElementById('disponible').checked
+            };
+
+            mensaje.style.display = 'block';
+            mensaje.style.color = '#555';
+            mensaje.style.backgroundColor = '#f4f4f4';
+            mensaje.textContent = 'Actualizando flor...';
+
+            try {
+                const respuesta = await fetch(`/api/flores/${florId}/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    },
+                    body: JSON.stringify(datosFlor)
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.ok) {
+                    mensaje.style.color = '#1b5e20';
+                    mensaje.style.backgroundColor = '#e8f5e9';
+                    mensaje.textContent = 'Flor actualizada correctamente.';
+                    
+                    setTimeout(() => {
+                        window.location.href = "{% url 'listar_flores' %}";
+                    }, 1200);
+                } else {
+                    mensaje.style.color = '#c62828';
+                    mensaje.style.backgroundColor = '#ffebee';
+                    mensaje.textContent = datos.errores ? datos.errores.join(' ') : 'Error al actualizar la flor.';
+                }
+            } catch (error) {
+                mensaje.style.color = '#c62828';
+                mensaje.style.backgroundColor = '#ffebee';
+                mensaje.textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
 </body>
 </html>
