@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Georgia', 'Segoe UI', serif;
+            background-color: #fcfbfa;
+            color: #2c3531;
             margin: 0;
             padding: 40px 20px;
             display: flex;
@@ -27,33 +27,38 @@
             width: 100%;
             max-width: 850px;
             background-color: #ffffff;
-            padding: 35px;
+            padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border-top: 6px solid #2e7d32;
+            box-shadow: 0 10px 30px rgba(44, 53, 49, 0.05);
+            border-top: 5px solid #4a6b5d;
+            border-bottom: 1px solid #f0ebe5;
         }
 
         h1 {
-            color: #2c5e3b;
+            color: #3b5249;
             margin-bottom: 10px;
-            font-size: 30px;
+            font-size: 28px;
             text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         p.bienvenida {
             text-align: center;
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
+            color: #7b8c83;
+            font-size: 15px;
+            margin-bottom: 35px;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         h2 {
-            color: #2c5e3b;
-            font-size: 20px;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e8f5e9;
-            padding-bottom: 8px;
+            color: #4a6b5d;
+            font-size: 18px;
+            margin-top: 30px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #f0ebe5;
+            padding-bottom: 10px;
+            font-weight: 500;
         }
 
         .grid-menu {
@@ -63,28 +68,30 @@
             margin-bottom: 30px;
             padding: 0;
             list-style: none;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         .grid-menu li a {
             display: block;
-            background-color: #f9fbf9;
-            color: #2e7d32;
+            background-color: #faf9f7;
+            color: #3b5249;
             text-align: center;
-            padding: 16px 12px;
+            padding: 18px 14px;
             border-radius: 8px;
-            border: 1px solid #c8e6c9;
+            border: 1px solid #e8e2d9;
             text-decoration: none;
             font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s ease;
+            font-size: 13px;
+            transition: all 0.25s ease;
+            letter-spacing: 0.3px;
         }
 
         .grid-menu li a:hover {
-            background-color: #2e7d32;
+            background-color: #4a6b5d;
             color: #ffffff;
-            border-color: #2e7d32;
+            border-color: #4a6b5d;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+            box-shadow: 0 6px 15px rgba(74, 107, 93, 0.15);
         }
 
         table {
@@ -92,46 +99,53 @@
             border-collapse: collapse;
             margin-top: 15px;
             font-size: 14px;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         th {
-            background-color: #2e7d32;
-            color: white;
+            background-color: #f4efe9;
+            color: #4a6b5d;
             text-align: left;
             padding: 12px;
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e8e2d9;
         }
 
         td {
             padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            color: #444;
+            border-bottom: 1px solid #f0ebe5;
+            color: #2c3531;
         }
 
         tr:nth-child(even) {
-            background-color: #f9fbf9;
+            background-color: #faf9f7;
         }
 
         tr:hover {
-            background-color: #f1f8e9;
+            background-color: #f4efe9;
         }
 
         .badge-disponible {
-            color: #2e7d32;
-            font-weight: bold;
-            background-color: #e8f5e9;
-            padding: 4px 8px;
-            border-radius: 4px;
+            color: #3b5249;
+            font-weight: 600;
+            background-color: #eaf2ed;
+            padding: 4px 10px;
+            border-radius: 20px;
             display: inline-block;
+            font-size: 12px;
         }
 
         .badge-nodisponible {
-            color: #c62828;
-            font-weight: bold;
-            background-color: #ffebee;
-            padding: 4px 8px;
-            border-radius: 4px;
+            color: #a34848;
+            font-weight: 600;
+            background-color: #fdf2f2;
+            padding: 4px 10px;
+            border-radius: 20px;
             display: inline-block;
+            font-size: 12px;
         }
     </style>
 </head>
