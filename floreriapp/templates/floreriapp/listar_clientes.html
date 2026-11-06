@@ -13,7 +13,8 @@
 
         body {
             font-family: 'Georgia', 'Segoe UI', serif;
-            background-color: #fcfbfa;
+            background-color: #faf6f0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 100 100'%3E%3Cg fill='%23d88a9a' fill-opacity='0.06'%3E%3Cpath d='M50 32c-5-8-16-7-18 2-8-3-14 5-8 13-8 5-5 15 4 15-2 8 6 14 13 8 5 8 15 5 14-4 8-3 5-14-4-14 3-8-5-14-13-7-5-8-15-5-13 4z'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23e6b89c' fill-opacity='0.08'/%3E%3Cpath d='M10 82c-3-4-9-3-10 1-4-2-7 3-4 7-4 3-2 8 2 8-1 4 3 7 7 4 3 4 8 3 7-2 4-2 3-8-2-8 1-4-3-7-7-4-3-4-8-3-7 2z'/%3E%3C/g%3E%3C/svg%3E");
             color: #2c3531;
             margin: 0;
             padding: 40px 20px;
@@ -21,6 +22,31 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .floral-corner-tl {
+            position: fixed;
+            top: -30px;
+            left: -30px;
+            width: 240px;
+            height: 240px;
+            pointer-events: none;
+            opacity: 0.22;
+            z-index: 0;
+        }
+
+        .floral-corner-br {
+            position: fixed;
+            bottom: -30px;
+            right: -30px;
+            width: 240px;
+            height: 240px;
+            pointer-events: none;
+            opacity: 0.22;
+            transform: rotate(180deg);
+            z-index: 0;
         }
 
         .container {
@@ -28,16 +54,24 @@
             max-width: 900px;
             background-color: #ffffff;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(44, 53, 49, 0.05);
-            border-top: 5px solid #4a6b5d;
-            border-bottom: 1px solid #f0ebe5;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(74, 107, 93, 0.08);
+            border-top: 6px solid #4a6b5d;
+            border-bottom: 3px solid #e8b4b8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-decoracion {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
         }
 
         h1 {
-            color: #3b5249;
+            color: #2c4a3b;
             margin-bottom: 25px;
-            font-size: 26px;
+            font-size: 30px;
             text-align: center;
             font-weight: 500;
             letter-spacing: 0.5px;
@@ -47,20 +81,22 @@
             display: inline-block;
             background-color: #4a6b5d;
             color: #ffffff;
-            padding: 11px 20px;
-            border-radius: 6px;
+            padding: 12px 22px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 13.5px;
             margin-bottom: 25px;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             font-family: 'Segoe UI', sans-serif;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(74, 107, 93, 0.15);
         }
 
         .btn-crear:hover {
             background-color: #3b5249;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 107, 93, 0.25);
         }
 
         table {
@@ -72,29 +108,29 @@
         }
 
         th {
-            background-color: #f4efe9;
-            color: #4a6b5d;
+            background-color: #f7ebe8;
+            color: #3b5249;
             text-align: left;
-            padding: 12px;
+            padding: 13px 12px;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 12px;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #e8e2d9;
+            letter-spacing: 0.6px;
+            border-bottom: 2px solid #e8b4b8;
         }
 
         td {
-            padding: 12px;
-            border-bottom: 1px solid #f0ebe5;
+            padding: 13px 12px;
+            border-bottom: 1px solid #f5eaeb;
             color: #2c3531;
         }
 
         tr:nth-child(even) {
-            background-color: #faf9f7;
+            background-color: #fdfaf7;
         }
 
         tr:hover {
-            background-color: #f4efe9;
+            background-color: #f9edea;
         }
 
         .acciones-cell a {
@@ -107,36 +143,50 @@
         }
 
         .acciones-cell a:hover {
-            color: #2c3531;
+            color: #2c4a3b;
             text-decoration: underline;
         }
 
         .acciones-cell a.eliminar {
-            color: #a34848;
+            color: #c62828;
         }
 
         .acciones-cell a.eliminar:hover {
-            color: #8b3a3a;
+            color: #b71c1c;
         }
 
         .volver-link {
-            color: #6b7c72;
+            color: #4a6b5d;
             text-decoration: none;
-            font-weight: 500;
-            font-size: 13px;
+            font-weight: 600;
+            font-size: 14px;
             display: inline-block;
             transition: color 0.2s ease;
             font-family: 'Segoe UI', sans-serif;
         }
 
         .volver-link:hover {
-            color: #3b5249;
+            color: #2c4a3b;
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
+
+    <svg class="floral-corner-tl" viewBox="0 0 200 200">
+        <path fill="#d88a9a" d="M40,20 C60,5 90,15 95,40 C110,30 135,45 130,70 C145,85 140,115 115,120 C120,140 100,165 80,155 C65,170 35,160 30,135 C10,135 0,110 10,90 C-5,70 10,40 30,45 C30,30 35,20 40,20 Z"/>
+        <circle cx="75" cy="90" r="14" fill="#e6b89c"/>
+        <path fill="#4a6b5d" d="M140,120 C160,110 180,125 175,145 C190,155 185,180 165,185 C160,200 135,195 130,180 C115,185 100,170 110,155 C95,145 105,125 125,130 C130,120 135,120 140,120 Z"/>
+    </svg>
+
+    <svg class="floral-corner-br" viewBox="0 0 200 200">
+        <path fill="#d88a9a" d="M40,20 C60,5 90,15 95,40 C110,30 135,45 130,70 C145,85 140,115 115,120 C120,140 100,165 80,155 C65,170 35,160 30,135 C10,135 0,110 10,90 C-5,70 10,40 30,45 C30,30 35,20 40,20 Z"/>
+        <circle cx="75" cy="90" r="14" fill="#e6b89c"/>
+        <path fill="#4a6b5d" d="M140,120 C160,110 180,125 175,145 C190,155 185,180 165,185 C160,200 135,195 130,180 C115,185 100,170 110,155 C95,145 105,125 125,130 C130,120 135,120 140,120 Z"/>
+    </svg>
+
     <div class="container">
+        <div class="header-decoracion">👤 🌿 🌺</div>
         <h1>Listado de Clientes</h1>
 
         <a href="{% url 'crear_cliente' %}" class="btn-crear"> + Registrar nuevo cliente</a>
