@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Georgia', 'Segoe UI', serif;
+            background-color: #fcfbfa;
+            color: #2c3531;
             margin: 0;
             padding: 40px 20px;
             display: flex;
@@ -25,72 +25,82 @@
 
         .contenedor-form {
             background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 35px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(44, 53, 49, 0.05);
             width: 100%;
             max-width: 420px;
-            border-top: 5px solid #2e7d32;
+            border-top: 4px solid #4a6b5d;
+            border-bottom: 1px solid #f0ebe5;
         }
 
         h1 {
-            color: #2c5e3b;
+            color: #3b5249;
             margin-bottom: 25px;
-            font-size: 26px;
+            font-size: 24px;
             text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
         }
 
         .campo-grupo {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         label {
+            font-family: 'Segoe UI', sans-serif;
             font-weight: 600;
-            color: #444;
-            font-size: 14px;
+            color: #5a6b62;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input[type="text"],
         input[type="email"],
         input[type="tel"] {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
+            padding: 11px 14px;
+            border: 1px solid #dcd6cd;
             border-radius: 6px;
             font-size: 14px;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #faf9f7;
+            color: #2c3531;
+            transition: all 0.25s ease;
         }
 
         input:focus {
-            border-color: #2e7d32;
+            border-color: #4a6b5d;
+            background-color: #ffffff;
             outline: none;
-            box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
+            box-shadow: 0 0 0 3px rgba(74, 107, 93, 0.12);
         }
 
         button[type="submit"] {
             width: 100%;
-            background-color: #2e7d32;
-            color: white;
+            background-color: #4a6b5d;
+            color: #ffffff;
             border: none;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            transition: all 0.2s ease;
             margin-top: 10px;
+            letter-spacing: 0.5px;
         }
 
         button[type="submit"]:hover {
-            background-color: #1b5e20;
+            background-color: #3b5249;
         }
 
         button[type="submit"]:active {
@@ -100,27 +110,29 @@
         a.volver {
             display: block;
             text-align: center;
-            color: #2e7d32;
+            color: #6b7c72;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 500;
+            font-size: 13px;
             margin-top: 25px;
             transition: color 0.2s ease;
         }
 
         a.volver:hover {
-            color: #1b5e20;
+            color: #3b5249;
             text-decoration: underline;
         }
 
         #mensaje {
             margin-top: 15px;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
             display: none;
             font-weight: 600;
+            font-family: 'Segoe UI', sans-serif;
         }
     </style>
 </head>
