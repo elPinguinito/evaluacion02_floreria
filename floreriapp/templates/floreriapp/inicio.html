@@ -62,10 +62,43 @@
             z-index: 1;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
         .header-decoracion {
-            text-align: center;
             font-size: 28px;
-            margin-bottom: 8px;
+        }
+
+        .btn-logout {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout:hover {
+            background-color: #c62828;
+            color: #ffffff;
+            border-color: #c62828;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(198, 40, 40, 0.2);
+        }
+
+        .btn-logout:active {
+            transform: translateY(0);
         }
 
         h1 {
@@ -203,7 +236,12 @@
     </svg>
 
     <div class="container">
-        <div class="header-decoracion">🌸 🌿 🌺</div>
+        <!-- Barra superior con icono decorativo y botón de cerrar sesión -->
+        <div class="top-bar">
+            <div class="header-decoracion">🌸 🌿 🌺</div>
+            <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
+        </div>
+
         <h1>Panel de Control - Florería</h1>
         <p class="bienvenida">Bienvenido al sistema de administración de la floristería.</p>
 
@@ -237,11 +275,17 @@
     </div>
 
     <script>
-        const token = sessionStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
         if (!token) {
             window.location.href = "{% url 'login' %}";
         }
+
+        document.getElementById('btnCerrarSesion').addEventListener('click', function() {
+            sessionStorage.removeItem('token');
+            localStorage.removeItem('token');
+            window.location.href = "{% url 'login' %}";
+        });
 
         async function cargarFlores() {
             const tbody = document.getElementById('tabla-flores-body');
